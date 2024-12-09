@@ -1,7 +1,7 @@
 "use client"
 import { AlignRight } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
     Sheet,
     SheetContent,
@@ -11,10 +11,17 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 import Container from "./Container";
+import { useSession,signOut } from "next-auth/react";
 
 
 const Navbar = () => {
     const pathName = usePathname()
+    const router=useRouter();
+    const session = useSession()
+    console.log(session);
+    const handler=()=>{
+        router.push('/api/auth/signin')
+    }
     const links = [
         {
             title: 'Home',
@@ -39,7 +46,8 @@ const Navbar = () => {
         {
             title: 'contact',
             path: '/contact'
-        }
+        },
+     
     ]
     return (
         <div className=" border-b">
@@ -59,6 +67,10 @@ const Navbar = () => {
 
                 </ul>
             </nav>
+            <div>
+                {session.status === "authenticated"?<button onClick={()=>signOut()}>logout</button>:<button onClick={handler}>signin</button> }
+                
+            </div>
            <div className="block md:hidden">
            <Sheet  >
                 <SheetTrigger className="outline-0 focus:outline-0"><AlignRight /></SheetTrigger>
